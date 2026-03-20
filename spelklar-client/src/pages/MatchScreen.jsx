@@ -140,62 +140,67 @@ export default function MatchScreen() {
         <Timer seconds={match.timerSeconds} running={match.timerRunning} />
       </header>
 
-      {/* Action grid */}
-      <main className="match-actions" aria-label="Match actions">
-        {isEnded ? (
-          <div className="match-ended-message">
-            <p className="text-team">Match ended</p>
-            <button
-              className="btn-primary"
-              id="btn-view-summary"
-              onClick={() => navigate(`/match/${id}/end`)}
-              style={{ marginTop: 'var(--space-md)', maxWidth: 320, alignSelf: 'center' }}
-            >
-              View summary →
-            </button>
-          </div>
-        ) : !isLive ? (
-          <div className="match-pre-start">
-            <div className="match-code-display">
-              <p className="text-meta" style={{ marginBottom: 'var(--space-xs)' }}>Match code</p>
-              <p className="match-code-value" id="match-code-display">{id}</p>
-              <p className="text-meta" style={{ marginTop: 'var(--space-xs)' }}>
-                Share: <a href={liveUrl} target="_blank" rel="noreferrer" className="live-link">{liveUrl}</a>
-              </p>
-            </div>
-            <button
-              className="btn-primary"
-              id="btn-start-match"
-              onClick={handleStart}
-              disabled={initiating}
-              style={{ maxWidth: 320, alignSelf: 'center', width: '100%' }}
-            >
-              {initiating ? 'Starting…' : '▶ Start match'}
-            </button>
-          </div>
-        ) : (
-          <div className="match-btn-grid" id="action-grid">
-            {ACTION_TYPES.map(({ type, label }) => (
-              <ActionButton
-                key={type}
-                type={type}
-                label={label}
-                onPress={handleAction}
-                disabled={!!pendingTeam}
-              />
-            ))}
-          </div>
-        )}
-      </main>
+      {/* Scrollable body: actions above, events below */}
+      <div className="match-body">
 
-      {/* Event log */}
-      <section className="match-events">
-        <EventLog
-          events={match.events}
-          homeTeam={match.homeTeam}
-          awayTeam={match.awayTeam}
-        />
-      </section>
+        {/* Action grid */}
+        <main className="match-actions" aria-label="Match actions">
+          {isEnded ? (
+            <div className="match-ended-message">
+              <p className="text-team">Match ended</p>
+              <button
+                className="btn-primary"
+                id="btn-view-summary"
+                onClick={() => navigate(`/match/${id}/end`)}
+                style={{ marginTop: 'var(--space-md)', maxWidth: 320, alignSelf: 'center' }}
+              >
+                View summary →
+              </button>
+            </div>
+          ) : !isLive ? (
+            <div className="match-pre-start">
+              <div className="match-code-display">
+                <p className="text-meta" style={{ marginBottom: 'var(--space-xs)' }}>Match code</p>
+                <p className="match-code-value" id="match-code-display">{id}</p>
+                <p className="text-meta" style={{ marginTop: 'var(--space-xs)' }}>
+                  Share: <a href={liveUrl} target="_blank" rel="noreferrer" className="live-link">{liveUrl}</a>
+                </p>
+              </div>
+              <button
+                className="btn-primary"
+                id="btn-start-match"
+                onClick={handleStart}
+                disabled={initiating}
+                style={{ maxWidth: 320, alignSelf: 'center', width: '100%' }}
+              >
+                {initiating ? 'Starting…' : '▶ Start match'}
+              </button>
+            </div>
+          ) : (
+            <div className="match-btn-grid" id="action-grid">
+              {ACTION_TYPES.map(({ type, label }) => (
+                <ActionButton
+                  key={type}
+                  type={type}
+                  label={label}
+                  onPress={handleAction}
+                  disabled={!!pendingTeam}
+                />
+              ))}
+            </div>
+          )}
+        </main>
+
+        {/* Event log — always below buttons */}
+        <section className="match-events">
+          <EventLog
+            events={match.events}
+            homeTeam={match.homeTeam}
+            awayTeam={match.awayTeam}
+          />
+        </section>
+
+      </div>
 
       {/* Status bar */}
       <footer className="match-footer">

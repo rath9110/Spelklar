@@ -15,14 +15,22 @@
   flex-shrink: 0;
 }
 
+/* ---- Scrollable body ---- */
+.match-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+}
+
 /* ---- Action area ---- */
 .match-actions {
-  flex: 1;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: var(--space-md);
-  min-height: 0;
 }
 
 .match-btn-grid {
@@ -30,8 +38,8 @@
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: var(--space-sm);
-  height: 100%;
-  max-height: 520px;
+  /* Tall on mobile/iPad, sensibly capped on desktop */
+  height: clamp(280px, 52dvh, 480px);
 }
 
 /* Pre-match */
@@ -78,10 +86,8 @@
 
 /* ---- Events section ---- */
 .match-events {
-  padding: var(--space-sm) var(--space-md);
-  max-height: 200px;
-  overflow: hidden;
-  flex-shrink: 0;
+  padding: var(--space-sm) var(--space-md) var(--space-lg);
+  /* No max-height — events flow naturally in the scrollable body */
 }
 
 /* ---- Footer ---- */

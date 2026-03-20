@@ -26,11 +26,11 @@
 }
 
 .scoreboard__name--home {
-  text-align: right;
+  text-align: center;
 }
 
 .scoreboard__name--away {
-  text-align: left;
+  text-align: center;
 }
 
 /* spacer matching the divider width so names sit directly above their scores */
