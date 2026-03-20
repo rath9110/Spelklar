@@ -4,14 +4,17 @@ import './ScoreBoard.css';
 export default function ScoreBoard({ homeTeam, awayTeam, homeScore, awayScore }) {
   return (
     <div className="scoreboard" id="scoreboard">
-      <div className="scoreboard__team">
-        <span className="text-team scoreboard__name">{homeTeam}</span>
-        <span className="text-score scoreboard__score" id="home-score">{homeScore}</span>
+      {/* Row 1: team names — always aligned */}
+      <div className="scoreboard__names">
+        <span className="text-team scoreboard__name scoreboard__name--home">{homeTeam}</span>
+        <span className="scoreboard__names-gap" />
+        <span className="text-team scoreboard__name scoreboard__name--away">{awayTeam}</span>
       </div>
-      <div className="scoreboard__divider">–</div>
-      <div className="scoreboard__team scoreboard__team--away">
+      {/* Row 2: scores — always aligned */}
+      <div className="scoreboard__scores">
+        <span className="text-score scoreboard__score" id="home-score">{homeScore}</span>
+        <span className="scoreboard__divider">–</span>
         <span className="text-score scoreboard__score" id="away-score">{awayScore}</span>
-        <span className="text-team scoreboard__name">{awayTeam}</span>
       </div>
     </div>
   );
