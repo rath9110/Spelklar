@@ -1,0 +1,44 @@
+.event-log {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.event-log--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) 0;
+}
+
+.event-log__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px var(--space-md);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-subtle);
+  animation: fade-in 200ms ease;
+  border-left: 3px solid var(--event-color);
+}
+
+.event-log__time {
+  font-variant-numeric: tabular-nums;
+  min-width: 40px;
+}
+
+.event-log__icon {
+  font-size: 16px;
+}
+
+.event-log__type {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-dark);
+}
+
+.event-log__team {
+  font-size: 13px;
+}

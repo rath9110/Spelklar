@@ -1,0 +1,14 @@
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-dot--live .status-dot__icon {
+  animation: dot-pulse 1.5s ease-in-out infinite;
+}
+
+.status-dot__icon {
+  font-size: 12px;
+  line-height: 1;
+}

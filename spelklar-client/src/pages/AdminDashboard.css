@@ -1,0 +1,143 @@
+.admin {
+  background: var(--color-bg);
+  min-height: 100dvh;
+}
+
+.admin__inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.admin__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.admin__back {
+  width: auto;
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+.admin__heading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+.admin__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-dark);
+  letter-spacing: -0.5px;
+}
+
+.admin__export-btn {
+  width: auto;
+  padding: 12px 20px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.admin__card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.admin__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-2xl) var(--space-md);
+  text-align: center;
+}
+
+.admin__table-wrapper {
+  overflow-x: auto;
+}
+
+.admin__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.admin__table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  padding: var(--space-md) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.admin__table td {
+  padding: 14px var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-dark);
+  vertical-align: middle;
+}
+
+.admin__row {
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.admin__row:hover {
+  background: var(--color-bg-subtle);
+}
+
+.admin__row:last-child td {
+  border-bottom: none;
+}
+
+.admin__code {
+  font-weight: 700;
+  letter-spacing: 2px;
+  font-size: 13px;
+  color: var(--color-primary);
+  font-family: monospace;
+}
+
+.admin__score {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.admin__arrow {
+  color: var(--color-muted);
+  text-align: right;
+}
+
+.admin__status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.admin__status-badge--pre {
+  background: var(--color-bg-subtle);
+  color: var(--color-muted);
+}
+
+.admin__status-badge--live {
+  background: color-mix(in srgb, var(--color-goal) 15%, transparent);
+  color: var(--color-goal-dark);
+}
+
+.admin__status-badge--ended {
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  color: var(--color-primary);
+}

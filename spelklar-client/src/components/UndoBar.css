@@ -1,0 +1,49 @@
+.undo-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-dark);
+  color: #F7F7F5;
+  z-index: 100;
+  overflow: hidden;
+  animation: slide-up 200ms ease;
+}
+
+.undo-bar__progress {
+  height: 3px;
+  background: var(--color-goal);
+  transition: width 1s linear;
+}
+
+.undo-bar__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  gap: var(--space-md);
+}
+
+.undo-bar__message {
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+.undo-bar__btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  color: #F7F7F5;
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition);
+}
+
+.undo-bar__btn:hover {
+  background: rgba(255,255,255,0.25);
+}

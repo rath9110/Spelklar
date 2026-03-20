@@ -1,0 +1,49 @@
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--btn-color);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  color: #fff;
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  padding: var(--space-md);
+  transition: filter var(--transition), transform var(--transition);
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.action-btn:active {
+  filter: brightness(0.88);
+  transform: scale(0.96);
+}
+
+.action-btn--pulse {
+  animation: pulse-button 180ms ease;
+}
+
+.action-btn--disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.action-btn__icon {
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1;
+  display: block;
+}
+
+.action-btn__label {
+  font-family: var(--font-family);
+  font-size: clamp(16px, 3vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
