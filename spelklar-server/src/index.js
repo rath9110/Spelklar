@@ -22,6 +22,11 @@ const io = new Server(server, {
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
+// Health check – visiting / in a browser confirms the server is up
+app.get('/', (req, res) => {
+  res.json({ status: 'ok', service: 'Spelklar API', version: '1.0.0' });
+});
+
 // Attach io to the match router so it can broadcast
 matchRouter.setIo(io);
 app.use('/api/match', matchRouter);
