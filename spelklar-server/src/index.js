@@ -22,7 +22,7 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 const io = new Server(server, {
-  cors: { origin: allowedOrigins, methods: ['GET', 'POST', 'DELETE'] },
+  cors: { origin: allowedOrigins, methods: ['GET', 'POST', 'DELETE'], credentials: true },
 });
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));

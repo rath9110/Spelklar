@@ -24,18 +24,22 @@ export const api = {
     const res = await fetch(`${SERVER_URL}/api/match`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ homeTeam, awayTeam }),
     });
     return res.json();
   },
 
   async getMatch(id) {
-    const res = await fetch(`${SERVER_URL}/api/match/${id}`);
+    const res = await fetch(`${SERVER_URL}/api/match/${id}`, { credentials: 'include' });
     return res.json();
   },
 
   async startMatch(id) {
-    const res = await fetch(`${SERVER_URL}/api/match/${id}/start`, { method: 'POST' });
+    const res = await fetch(`${SERVER_URL}/api/match/${id}/start`, {
+      method: 'POST',
+      credentials: 'include',
+    });
     return res.json();
   },
 
@@ -43,34 +47,41 @@ export const api = {
     const res = await fetch(`${SERVER_URL}/api/match/${id}/event`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ type, team, note }),
     });
     return res.json();
   },
 
   async undoEvent(id) {
-    const res = await fetch(`${SERVER_URL}/api/match/${id}/event`, { method: 'DELETE' });
+    const res = await fetch(`${SERVER_URL}/api/match/${id}/event`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
     return res.json();
   },
 
   async endMatch(id) {
-    const res = await fetch(`${SERVER_URL}/api/match/${id}/end`, { method: 'POST' });
+    const res = await fetch(`${SERVER_URL}/api/match/${id}/end`, {
+      method: 'POST',
+      credentials: 'include',
+    });
     return res.json();
   },
 
   async getAllMatches() {
-    const res = await fetch(`${SERVER_URL}/api/matches`);
+    const res = await fetch(`${SERVER_URL}/api/matches`, { credentials: 'include' });
     return res.json();
   },
 
   // Teams
   async getTeams(clubId) {
-    const res = await fetch(`${SERVER_URL}/api/teams?clubId=${clubId}`);
+    const res = await fetch(`${SERVER_URL}/api/teams?clubId=${clubId}`, { credentials: 'include' });
     return res.json();
   },
 
   async getTeam(id) {
-    const res = await fetch(`${SERVER_URL}/api/teams/${id}`);
+    const res = await fetch(`${SERVER_URL}/api/teams/${id}`, { credentials: 'include' });
     return res.json();
   },
 
@@ -96,12 +107,12 @@ export const api = {
   },
 
   async getClub(id) {
-    const res = await fetch(`${SERVER_URL}/api/clubs/${id}`);
+    const res = await fetch(`${SERVER_URL}/api/clubs/${id}`, { credentials: 'include' });
     return res.json();
   },
 
   async getClubBySlug(slug) {
-    const res = await fetch(`${SERVER_URL}/api/clubs?slug=${slug}`);
+    const res = await fetch(`${SERVER_URL}/api/clubs?slug=${slug}`, { credentials: 'include' });
     return res.json();
   },
 

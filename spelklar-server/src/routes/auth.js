@@ -172,13 +172,14 @@ router.post('/verify-otp', async (req, res) => {
 
     // Set httpOnly cookie
     console.log('[13] Setting httpOnly cookie');
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: isProduction, // HTTPS required in production
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-origin, 'lax' for localhost
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
-    console.log('[14] Cookie set');
+    console.log(`[14] Cookie set (sameSite=${isProduction ? 'none' : 'lax'}, secure=${isProduction})`);
 
     console.log('[15] Sending success response');
     res.json({
