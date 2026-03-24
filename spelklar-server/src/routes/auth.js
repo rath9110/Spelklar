@@ -82,8 +82,8 @@ router.post('/request-otp', async (req, res) => {
     res.json({
       success: true,
       message: 'OTP sent to phone',
-      // Remove this in production; only for development
-      ...(process.env.NODE_ENV === 'development' && { code }),
+      // In demo mode, return the code for testing; remove for production
+      ...(process.env.DEMO_MODE === 'true' || process.env.NODE_ENV === 'development') && { code },
     });
   } catch (err) {
     console.error('Error requesting OTP:', err);
@@ -101,7 +101,8 @@ router.post('/verify-otp', async (req, res) => {
     }
 
     // In demo mode, accept any OTP code (useful for testing)
-    const isDemoMode = process.env.NODE_ENV === 'development' || !process.env.SMS_USERNAME;
+    // Explicit DEMO_MODE env var takes precedence, otherwise check development or missing SMS creds
+    const isDemoMode = process.env.DEMO_MODE === 'true' || process.env.NODE_ENV === 'development' || !process.env.SMS_USERNAME;
 
     if (!isDemoMode) {
       // Production mode: strict OTP validation
