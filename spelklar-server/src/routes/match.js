@@ -41,7 +41,8 @@ router.post('/', async (req, res) => {
     const matchKey = uuidv4().slice(0, 6).toUpperCase();
     const match = await createMatch({ matchKey, homeTeam, awayTeam, homeTeamId, awayTeamId });
     const safe = await getMatchSafe(match.id);
-    res.json({ matchKey, match: safe });
+    // Return the match with matchKey as an alias for id for frontend navigation
+    res.json({ ...safe, matchKey });
   } catch (err) {
     console.error('Error creating match:', err);
     res.status(500).json({ error: 'Failed to create match' });
