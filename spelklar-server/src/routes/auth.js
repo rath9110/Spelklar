@@ -102,11 +102,17 @@ router.post('/verify-otp', async (req, res) => {
 
     // In demo mode, accept any OTP code (useful for testing)
     // Explicit DEMO_MODE env var takes precedence, otherwise check development or missing SMS creds
-    const isDemoMode = process.env.DEMO_MODE === 'true' || process.env.NODE_ENV === 'development' || !process.env.SMS_USERNAME;
+    const isDemoMode =
+      process.env.DEMO_MODE?.toLowerCase() === 'true' ||
+      process.env.NODE_ENV === 'development' ||
+      !process.env.SMS_USERNAME;
+
+    console.log(`[OTP Verify] phone=${phone}, isDemoMode=${isDemoMode}, NODE_ENV=${process.env.NODE_ENV}, DEMO_MODE=${process.env.DEMO_MODE}`);
 
     if (!isDemoMode) {
       // Production mode: strict OTP validation
       const otpData = otpStore.get(phone);
+      console.log(`[OTP Verify] Production mode: checking stored code for ${phone}. Found: ${!!otpData}`);
       if (!otpData || otpData.code !== code || Date.now() > otpData.expiresAt) {
         return res.status(401).json({ error: 'Invalid or expired OTP' });
       }
