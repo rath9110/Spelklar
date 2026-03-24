@@ -8,6 +8,7 @@ const authRouter = require('./routes/auth');
 const teamsRouter = require('./routes/teams');
 const clubsRouter = require('./routes/clubs');
 const followsRouter = require('./routes/follows');
+const photosRouter = require('./routes/photos');
 
 const app = express();
 const server = http.createServer(app);
@@ -40,6 +41,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/teams', teamsRouter);
 app.use('/api/clubs', clubsRouter);
 app.use('/api/follows', followsRouter);
+app.use('/api/photos', photosRouter);
 
 // Get all matches (admin)
 app.get('/api/matches', async (req, res) => {
@@ -80,6 +82,15 @@ io.on('connection', (socket) => {
       socket.join(`user:${userId}`);
     }
   });
+
+  // Broadcast helpers (exposed for routes)
+  socket.broadcastPhoto = (matchId, photo) => {
+    io.to(`match:${matchId}`).emit('photo:new', { matchId, photo });
+  };
+
+  socket.broadcastPhotoModeration = (photoId, status) => {
+    io.emit('photo:moderated', { photoId, status });
+  };
 });
 
 const PORT = process.env.PORT || 3001;

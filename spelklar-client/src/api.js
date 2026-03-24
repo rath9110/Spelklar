@@ -154,4 +154,80 @@ export const api = {
     });
     return res.json();
   },
+
+  // Photos
+  async getUploadUrl(matchId, contentType = 'image/jpeg') {
+    const res = await fetch(`${SERVER_URL}/api/photos/upload-url`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ matchId, contentType }),
+    });
+    return res.json();
+  },
+
+  async markUploadComplete(photoId) {
+    const res = await fetch(`${SERVER_URL}/api/photos/${photoId}/uploaded`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async getPhotos(matchId) {
+    const res = await fetch(`${SERVER_URL}/api/photos?matchId=${matchId}`, {
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async getPhoto(id) {
+    const res = await fetch(`${SERVER_URL}/api/photos/${id}`, {
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async moderatePhoto(id, status) {
+    const res = await fetch(`${SERVER_URL}/api/photos/${id}/moderate`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ status }),
+    });
+    return res.json();
+  },
+
+  async deletePhoto(id) {
+    const res = await fetch(`${SERVER_URL}/api/photos/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async grantConsent(photoId, scope = 'match') {
+    const res = await fetch(`${SERVER_URL}/api/photos/${photoId}/consent`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ scope }),
+    });
+    return res.json();
+  },
+
+  async revokeConsent(photoId) {
+    const res = await fetch(`${SERVER_URL}/api/photos/${photoId}/consent`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async getPendingPhotos() {
+    const res = await fetch(`${SERVER_URL}/api/photos/moderate/pending`, {
+      credentials: 'include',
+    });
+    return res.json();
+  },
 };

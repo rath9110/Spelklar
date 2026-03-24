@@ -14,6 +14,8 @@ model User {
   displayName  String?
   role         String   @default("visitor")
   follows      Follow[]
+  photos       Photo[]
+  consents     PhotoConsent[]
   createdAt    DateTime @default(now())
   lastLoginAt  DateTime?
 }
@@ -58,6 +60,7 @@ model Match {
   timerSeconds Int      @default(0)
   status       String   @default("pre")
   events       MatchEvent[]
+  photos       Photo[]
   createdAt    DateTime @default(now())
   endedAt      DateTime?
 
@@ -76,4 +79,39 @@ model MatchEvent {
   note         String?
   timerSeconds Int
   timestamp    DateTime @default(now())
+}
+
+model Photo {
+  id           String   @id @default(cuid())
+  matchId      String
+  match        Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  uploaderId   String
+  uploader     User     @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
+  storageKey   String                  // R2 object key
+  thumbnailKey String?                 // Compressed thumbnail key
+  caption      String?
+  status       String   @default("pending") // pending | approved | rejected | deleted
+  moderatedBy  String?                 // userId of moderator
+  moderatedAt  DateTime?
+  consents     PhotoConsent[]
+  createdAt    DateTime @default(now())
+  deletedAt    DateTime?               // Soft delete for GDPR
+
+  @@index([matchId])
+  @@index([uploaderId])
+  @@index([status])
+}
+
+model PhotoConsent {
+  id        String   @id @default(cuid())
+  photoId   String
+  photo     Photo    @relation(fields: [photoId], references: [id], onDelete: Cascade)
+  grantedBy String                    // userId of consenting parent
+  user      User     @relation(fields: [grantedBy], references: [id], onDelete: Cascade)
+  scope     String   @default("match") // match | club | public
+  grantedAt DateTime @default(now())
+  revokedAt DateTime?
+
+  @@unique([photoId, grantedBy])
+  @@index([photoId])
 }
