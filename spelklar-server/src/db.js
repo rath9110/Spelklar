@@ -45,13 +45,18 @@ async function getMatch(id) {
       events: {
         orderBy: { timestamp: 'asc' },
       },
+      homeTeam: true,
+      awayTeam: true,
     },
   });
 
   if (!match) return null;
 
-  // Add runtime state
+  // Transform for backward compatibility
+  match.homeTeam = match.homeTeam?.name || match.homeTeamName;
+  match.awayTeam = match.awayTeam?.name || match.awayTeamName;
   match.timerRunning = timers[id]?.running || false;
+
   return match;
 }
 
