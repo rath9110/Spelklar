@@ -14,7 +14,8 @@ Spelklar eliminates the administrative burden of recording match events at grass
 
 ### Phase 1: Persistence & Authentication ✓
 - SQLite database (upgradeable to PostgreSQL)
-- SMS OTP login via 46elks (demo mode shows codes in console)
+- SMS OTP login via 46elks
+- **Demo Mode:** Accept any 6-digit OTP code (no real SMS needed!)
 - JWT sessions with httpOnly cookies
 - Staff and visitor role separation
 
@@ -73,6 +74,7 @@ npm run dev     # Runs on localhost:5173
 
 ### 3. Access the App
 - **App:** http://localhost:5173
+- **Login:** Use any phone (+46...) and **any 6-digit code** (demo mode!)
 - **Demo Guide:** See `DEMO_GUIDE.md` for full walkthrough
 
 ## 📊 Tech Stack

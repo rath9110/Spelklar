@@ -100,14 +100,25 @@ router.post('/verify-otp', async (req, res) => {
       return res.status(400).json({ error: 'Phone and code are required' });
     }
 
-    // Check if OTP exists and is valid
-    const otpData = otpStore.get(phone);
-    if (!otpData || otpData.code !== code || Date.now() > otpData.expiresAt) {
-      return res.status(401).json({ error: 'Invalid or expired OTP' });
-    }
+    // In demo mode, accept any OTP code (useful for testing)
+    const isDemoMode = process.env.NODE_ENV === 'development' || !process.env.SMS_USERNAME;
 
-    // OTP is valid, delete it
-    otpStore.delete(phone);
+    if (!isDemoMode) {
+      // Production mode: strict OTP validation
+      const otpData = otpStore.get(phone);
+      if (!otpData || otpData.code !== code || Date.now() > otpData.expiresAt) {
+        return res.status(401).json({ error: 'Invalid or expired OTP' });
+      }
+      // OTP is valid, delete it
+      otpStore.delete(phone);
+    } else {
+      // Demo mode: accept any code, just log it
+      const otpData = otpStore.get(phone);
+      if (otpData) {
+        otpStore.delete(phone);
+      }
+      console.log(`✓ Demo mode: OTP accepted (${code}) for ${phone}`);
+    }
 
     // Find or create user
     let user = await prisma.user.findUnique({

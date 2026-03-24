@@ -56,9 +56,9 @@ You'll see the **staff entry screen** (scoring interface).
 
 2. **Login as parent (Anna)**
    - Phone: `+46701234567`
-   - Wait for OTP code...
-   - Check **Terminal 1** (backend) console for the code: `🔐 OTP for +46701234567: XXXXXX`
-   - Paste the code and submit ✓
+   - OTP code: **Any 6-digit number** you want (e.g., `123456` or `999999`)
+   - Demo mode accepts any code! Just make it up.
+   - Submit ✓
 
 3. **View personalized feed**
    - You're redirected to `/feed`
@@ -94,8 +94,8 @@ You'll see the **staff entry screen** (scoring interface).
 
 3. **Login as staff (Erik)**
    - Phone: `+46702345678`
-   - Check Terminal 1 for OTP code
-   - Paste and submit ✓
+   - OTP code: Any 6 digits (e.g., `111111`)
+   - Submit ✓
 
 4. **Go to moderation queue**
    - Direct URL: `http://localhost:5173/admin/photos`
@@ -189,9 +189,9 @@ npm run seed  # Clears everything and repopulates
 ## 7. Troubleshooting
 
 ### "OTP code not working"
-- Check Terminal 1 (backend) for the actual code
-- Codes expire after 5 minutes
-- Request a new one if it doesn't work
+- In demo mode, **any 6-digit code works** (e.g., `123456`, `999999`)
+- Just type any number and submit
+- If you want to see the server-generated code, check Terminal 1 for: `🔐 OTP for +46701234567: XXXXXX`
 
 ### "Photos not uploading"
 - R2 not configured (expected in demo)
