@@ -159,9 +159,11 @@ async function startTimer(id, onTick) {
     const updated = await prisma.match.update({
       where: { id },
       data: { timerSeconds: { increment: 1 } },
-      include: { events: true },
+      include: { events: true, homeTeam: true, awayTeam: true },
     });
 
+    updated.homeTeam = updated.homeTeam?.name || updated.homeTeamName;
+    updated.awayTeam = updated.awayTeam?.name || updated.awayTeamName;
     updated.timerRunning = true;
     onTick(updated);
   }, 1000);
