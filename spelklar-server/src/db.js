@@ -189,12 +189,16 @@ async function getAllMatches() {
   const matches = await prisma.match.findMany({
     include: {
       events: true,
+      homeTeam: true,
+      awayTeam: true,
     },
     orderBy: { createdAt: 'desc' },
   });
 
   return matches.map((match) => ({
     ...match,
+    homeTeam: match.homeTeam?.name || match.homeTeamName,
+    awayTeam: match.awayTeam?.name || match.awayTeamName,
     timerRunning: timers[match.id]?.running || false,
   }));
 }
