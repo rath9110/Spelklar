@@ -54,15 +54,6 @@ export default function MyFeed() {
     });
   };
 
-  const handleLogout = async () => {
-    try {
-      await api.logout();
-      localStorage.removeItem('user');
-      navigate('/');
-    } catch (err) {
-      console.error('Error logging out:', err);
-    }
-  };
 
   if (loading) {
     return (
@@ -78,9 +69,6 @@ export default function MyFeed() {
         <div className="empty-state">
           <p>No live matches from teams you follow</p>
           <a href="/teams">Browse teams to follow</a>
-          <button className="secondary" onClick={handleLogout}>
-            Log out
-          </button>
         </div>
         <BottomNav />
       </div>
@@ -124,12 +112,6 @@ export default function MyFeed() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="feed-footer">
-        <button className="secondary" onClick={handleLogout}>
-          Log out
-        </button>
       </div>
 
       <BottomNav />
