@@ -93,10 +93,15 @@ router.post('/request-otp', async (req, res) => {
 
 // Verify OTP and create/update user
 router.post('/verify-otp', async (req, res) => {
+  console.log('=== /verify-otp endpoint called ===');
+  console.log('Body:', req.body);
+
   try {
     const { phone, code } = req.body;
+    console.log(`[1] Extracted phone=${phone}, code=${code}`);
 
     if (!phone || !code) {
+      console.log('[2] Missing phone or code');
       return res.status(400).json({ error: 'Phone and code are required' });
     }
 
@@ -107,32 +112,41 @@ router.post('/verify-otp', async (req, res) => {
       process.env.NODE_ENV === 'development' ||
       !process.env.SMS_USERNAME;
 
-    console.log(`[OTP Verify] phone=${phone}, isDemoMode=${isDemoMode}, NODE_ENV=${process.env.NODE_ENV}, DEMO_MODE=${process.env.DEMO_MODE}`);
+    console.log(`[3] isDemoMode=${isDemoMode}`);
+    console.log(`    NODE_ENV=${process.env.NODE_ENV}`);
+    console.log(`    DEMO_MODE=${process.env.DEMO_MODE}`);
+    console.log(`    SMS_USERNAME exists: ${!!process.env.SMS_USERNAME}`);
 
     if (!isDemoMode) {
+      console.log('[4a] PRODUCTION MODE - validating OTP code');
       // Production mode: strict OTP validation
       const otpData = otpStore.get(phone);
-      console.log(`[OTP Verify] Production mode: checking stored code for ${phone}. Found: ${!!otpData}`);
+      console.log(`[4b] otpData found: ${!!otpData}`);
       if (!otpData || otpData.code !== code || Date.now() > otpData.expiresAt) {
+        console.log('[4c] OTP validation failed');
         return res.status(401).json({ error: 'Invalid or expired OTP' });
       }
       // OTP is valid, delete it
       otpStore.delete(phone);
     } else {
+      console.log('[4a] DEMO MODE - accepting any code');
       // Demo mode: accept any code, just log it
       const otpData = otpStore.get(phone);
       if (otpData) {
         otpStore.delete(phone);
       }
-      console.log(`✓ Demo mode: OTP accepted (${code}) for ${phone}`);
+      console.log(`[4b] ✓ Demo mode: OTP accepted (${code}) for ${phone}`);
     }
 
     // Find or create user
+    console.log('[5] Finding or creating user');
     let user = await prisma.user.findUnique({
       where: { phone },
     });
+    console.log(`[6] User lookup result: ${user ? 'found' : 'not found'}`);
 
     if (!user) {
+      console.log('[7] Creating new user');
       user = await prisma.user.create({
         data: {
           phone,
@@ -140,25 +154,33 @@ router.post('/verify-otp', async (req, res) => {
           role: 'visitor',
         },
       });
+      console.log('[8] User created:', user.id);
     }
 
     // Update last login
+    console.log('[9] Updating last login');
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() },
     });
+    console.log('[10] Login timestamp updated');
 
     // Generate JWT
+    console.log('[11] Generating JWT');
     const token = generateToken(user.id, user.role);
+    console.log('[12] JWT generated');
 
     // Set httpOnly cookie
+    console.log('[13] Setting httpOnly cookie');
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+    console.log('[14] Cookie set');
 
+    console.log('[15] Sending success response');
     res.json({
       success: true,
       user: {
@@ -169,8 +191,11 @@ router.post('/verify-otp', async (req, res) => {
       },
     });
   } catch (err) {
-    console.error('Error verifying OTP:', err);
-    res.status(500).json({ error: 'Failed to verify OTP' });
+    console.error('=== ERROR in /verify-otp ===');
+    console.error('Error message:', err.message);
+    console.error('Error code:', err.code);
+    console.error('Full error:', err);
+    res.status(500).json({ error: 'Failed to verify OTP', details: err.message });
   }
 });
 
