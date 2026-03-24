@@ -19,18 +19,6 @@ The core Match Engine is built and running. A volunteer at the Sekretariat can:
 
 ---
 
-## The "One-Tap" Philosophy
-
-Every design decision must pass these three tests:
-
-| Test | Standard |
-|---|---|
-| **Zero Training** | A parent can run the Sekretariat after < 60 seconds of onboarding |
-| **Grandparent-Proof** | If a non-tech-savvy relative finds it confusing, it's too complex |
-| **Forgiving by Design** | Every action in a high-pressure environment must have an immediate Undo |
-
----
-
 ## Phase 2 — Monetisation
 
 Once the match protocol is trusted by clubs, we activate three layered revenue streams. Each has a different buyer and a different pricing mechanism, so they compound rather than compete.

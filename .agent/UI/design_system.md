@@ -12,7 +12,19 @@ These override all other decisions. When in doubt, return to these.
 2. **Thumb-first.** Everything reachable with one hand. No stretch targets.
 3. **Error forgiveness over confirmation.** Use timed undo (5s). Never ask "are you sure?".
 4. **Zero cognitive load mid-match.** No settings visible during play. No decisions needed.
-5. **Tablet-first, phone-compatible.** Layout must work on iPad before phone.
+5. **Tablet-first, phone-compatible.** Layout must work on Desktop, iPad and phone.
+
+---
+
+## The "One-Tap" Philosophy
+
+Every design decision must pass these three tests:
+
+| Test | Standard |
+|---|---|
+| **Zero Training** | A parent can run the Sekretariat after < 60 seconds of onboarding |
+| **Grandparent-Proof** | If a non-tech-savvy relative finds it confusing, it's too complex |
+| **Forgiving by Design** | Every action in a high-pressure environment must have an immediate Undo |
 
 ---
 

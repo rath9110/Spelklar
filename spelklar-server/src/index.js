@@ -2,7 +2,9 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const matchRouter = require('./routes/match');
+const authRouter = require('./routes/auth');
 
 const app = express();
 const server = http.createServer(app);
@@ -19,8 +21,9 @@ const io = new Server(server, {
   cors: { origin: allowedOrigins, methods: ['GET', 'POST', 'DELETE'] },
 });
 
-app.use(cors({ origin: allowedOrigins }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Health check – visiting / in a browser confirms the server is up
 app.get('/', (req, res) => {
@@ -30,11 +33,13 @@ app.get('/', (req, res) => {
 // Attach io to the match router so it can broadcast
 matchRouter.setIo(io);
 app.use('/api/match', matchRouter);
+app.use('/api/auth', authRouter);
 
 // Get all matches (admin)
-app.get('/api/matches', (req, res) => {
-  const { getAllMatches } = require('./matchStore');
-  res.json(getAllMatches());
+app.get('/api/matches', async (req, res) => {
+  const { getAllMatches } = require('./db');
+  const matches = await getAllMatches();
+  res.json(matches);
 });
 
 // Socket.io: clients join a room by matchId
