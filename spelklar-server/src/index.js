@@ -9,6 +9,7 @@ const teamsRouter = require('./routes/teams');
 const clubsRouter = require('./routes/clubs');
 const followsRouter = require('./routes/follows');
 const photosRouter = require('./routes/photos');
+const seedRouter = require('./routes/seed');
 
 const app = express();
 const server = http.createServer(app);
@@ -42,6 +43,7 @@ app.use('/api/teams', teamsRouter);
 app.use('/api/clubs', clubsRouter);
 app.use('/api/follows', followsRouter);
 app.use('/api/photos', photosRouter);
+app.use('/api/seed', seedRouter);
 
 // Get all matches (admin)
 app.get('/api/matches', async (req, res) => {

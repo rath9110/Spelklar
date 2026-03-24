@@ -61,17 +61,35 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// GET /api/clubs?slug=xxx – club by slug
+// GET /api/clubs or GET /api/clubs?slug=xxx – all clubs or club by slug
 router.get('/', async (req, res) => {
   try {
     const { slug } = req.query;
 
-    if (!slug) {
-      return res.status(400).json({ error: 'slug is required' });
+    // If slug provided, return specific club
+    if (slug) {
+      const club = await prisma.club.findUnique({
+        where: { slug },
+        include: {
+          teams: {
+            include: {
+              _count: {
+                select: { follows: true },
+              },
+            },
+          },
+        },
+      });
+
+      if (!club) {
+        return res.status(404).json({ error: 'Club not found' });
+      }
+
+      return res.json(club);
     }
 
-    const club = await prisma.club.findUnique({
-      where: { slug },
+    // Otherwise return all clubs
+    const clubs = await prisma.club.findMany({
       include: {
         teams: {
           include: {
@@ -83,14 +101,10 @@ router.get('/', async (req, res) => {
       },
     });
 
-    if (!club) {
-      return res.status(404).json({ error: 'Club not found' });
-    }
-
-    res.json(club);
+    res.json(clubs);
   } catch (err) {
-    console.error('Error fetching club:', err);
-    res.status(500).json({ error: 'Failed to fetch club' });
+    console.error('Error fetching clubs:', err);
+    res.status(500).json({ error: 'Failed to fetch clubs' });
   }
 });
 

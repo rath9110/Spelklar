@@ -10,6 +10,8 @@ import MyFeed from './pages/MyFeed';
 import TeamPage from './pages/TeamPage';
 import MatchFeed from './pages/MatchFeed';
 import PhotoModerationQueue from './pages/PhotoModerationQueue';
+import TeamsPage from './pages/TeamsPage';
+import ProfilePage from './pages/ProfilePage';
 
 export default function App() {
   return (
@@ -18,6 +20,8 @@ export default function App() {
         <Route path="/" element={<EnterCode />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/feed" element={<MyFeed />} />
+        <Route path="/teams" element={<TeamsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/team/:id" element={<TeamPage />} />
         <Route path="/match/:id" element={<MatchScreen />} />
         <Route path="/match/:id/end" element={<PostMatch />} />

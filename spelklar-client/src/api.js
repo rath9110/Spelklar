@@ -116,6 +116,11 @@ export const api = {
     return res.json();
   },
 
+  async getClubs() {
+    const res = await fetch(`${SERVER_URL}/api/clubs`, { credentials: 'include' });
+    return res.json();
+  },
+
   // Follows
   async followTeam(teamId) {
     const res = await fetch(`${SERVER_URL}/api/follows`, {
