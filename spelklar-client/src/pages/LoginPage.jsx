@@ -66,8 +66,9 @@ export default function LoginPage() {
         return;
       }
 
-      // Success – redirect to home
-      navigate('/');
+      // Success – store user and redirect
+      localStorage.setItem('user', JSON.stringify(data.user));
+      navigate('/feed');
     } catch (err) {
       setError('Network error. Please try again.');
     } finally {

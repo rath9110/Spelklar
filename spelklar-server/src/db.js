@@ -7,10 +7,14 @@ const prisma = new PrismaClient();
 // In-memory timer tracking (runtime state, not persisted)
 const timers = {};
 
-async function createMatch({ matchKey, homeTeam, awayTeam }) {
+async function createMatch({ matchKey, homeTeam, awayTeam, homeTeamId, awayTeamId }) {
   const match = await prisma.match.create({
     data: {
       id: matchKey,
+      homeTeamId: homeTeamId || null,
+      awayTeamId: awayTeamId || null,
+      homeTeamName: homeTeam,
+      awayTeamName: awayTeam,
       homeScore: 0,
       awayScore: 0,
       timerSeconds: 0,
@@ -21,13 +25,14 @@ async function createMatch({ matchKey, homeTeam, awayTeam }) {
     },
     include: {
       events: true,
+      homeTeam: true,
+      awayTeam: true,
     },
   });
 
-  // Store team names in a way we can retrieve them
-  // For backward compatibility, we'll add these as local properties
-  match.homeTeam = homeTeam;
-  match.awayTeam = awayTeam;
+  // For backward compatibility
+  match.homeTeam = match.homeTeam?.name || homeTeam;
+  match.awayTeam = match.awayTeam?.name || awayTeam;
   match.timerRunning = false;
 
   return match;

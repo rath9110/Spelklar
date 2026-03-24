@@ -17,20 +17,29 @@ router.setIo = (socketIo) => { io = socketIo; };
 
 function broadcast(matchId, match) {
   if (io) {
-    io.to(matchId).emit('match:update', match);
+    // Broadcast to match room
+    io.to(`match:${matchId}`).emit('match:update', match);
+
+    // Also broadcast to team rooms if teams exist
+    if (match.homeTeamId) {
+      io.to(`team:${match.homeTeamId}`).emit('match:update', match);
+    }
+    if (match.awayTeamId) {
+      io.to(`team:${match.awayTeamId}`).emit('match:update', match);
+    }
   }
 }
 
 // POST /api/match – create a new match
 router.post('/', async (req, res) => {
   try {
-    const { homeTeam, awayTeam } = req.body;
+    const { homeTeam, awayTeam, homeTeamId, awayTeamId } = req.body;
     if (!homeTeam || !awayTeam) {
       return res.status(400).json({ error: 'homeTeam and awayTeam are required' });
     }
     // Generate a short 6-char match key
     const matchKey = uuidv4().slice(0, 6).toUpperCase();
-    const match = await createMatch({ matchKey, homeTeam, awayTeam });
+    const match = await createMatch({ matchKey, homeTeam, awayTeam, homeTeamId, awayTeamId });
     const safe = await getMatchSafe(match.id);
     res.json({ matchKey, match: safe });
   } catch (err) {

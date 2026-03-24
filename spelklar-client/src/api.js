@@ -2,7 +2,22 @@ import { io } from 'socket.io-client';
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3001';
 
-export const socket = io(SERVER_URL, { autoConnect: false });
+// Get userId from localStorage (set after login)
+const getUserId = () => {
+  try {
+    const stored = localStorage.getItem('user');
+    return stored ? JSON.parse(stored).id : null;
+  } catch {
+    return null;
+  }
+};
+
+export const socket = io(SERVER_URL, {
+  autoConnect: false,
+  auth: {
+    userId: getUserId(),
+  },
+});
 
 export const api = {
   async createMatch(homeTeam, awayTeam) {
@@ -45,6 +60,98 @@ export const api = {
 
   async getAllMatches() {
     const res = await fetch(`${SERVER_URL}/api/matches`);
+    return res.json();
+  },
+
+  // Teams
+  async getTeams(clubId) {
+    const res = await fetch(`${SERVER_URL}/api/teams?clubId=${clubId}`);
+    return res.json();
+  },
+
+  async getTeam(id) {
+    const res = await fetch(`${SERVER_URL}/api/teams/${id}`);
+    return res.json();
+  },
+
+  async createTeam(name, clubId) {
+    const res = await fetch(`${SERVER_URL}/api/teams`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ name, clubId }),
+    });
+    return res.json();
+  },
+
+  // Clubs
+  async createClub(name, slug) {
+    const res = await fetch(`${SERVER_URL}/api/clubs`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ name, slug }),
+    });
+    return res.json();
+  },
+
+  async getClub(id) {
+    const res = await fetch(`${SERVER_URL}/api/clubs/${id}`);
+    return res.json();
+  },
+
+  async getClubBySlug(slug) {
+    const res = await fetch(`${SERVER_URL}/api/clubs?slug=${slug}`);
+    return res.json();
+  },
+
+  // Follows
+  async followTeam(teamId) {
+    const res = await fetch(`${SERVER_URL}/api/follows`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ teamId }),
+    });
+    return res.json();
+  },
+
+  async unfollowTeam(teamId) {
+    const res = await fetch(`${SERVER_URL}/api/follows/${teamId}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async getMyFollows() {
+    const res = await fetch(`${SERVER_URL}/api/follows/mine`, {
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  async getMyLiveMatches() {
+    const res = await fetch(`${SERVER_URL}/api/follows/mine/live`, {
+      credentials: 'include',
+    });
+    return res.json();
+  },
+
+  // Auth
+  async getCurrentUser() {
+    const res = await fetch(`${SERVER_URL}/api/auth/me`, {
+      credentials: 'include',
+    });
+    if (!res.ok) return null;
+    return res.json();
+  },
+
+  async logout() {
+    const res = await fetch(`${SERVER_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    });
     return res.json();
   },
 };

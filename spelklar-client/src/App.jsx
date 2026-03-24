@@ -6,6 +6,8 @@ import PostMatch from './pages/PostMatch';
 import SupporterFeed from './pages/SupporterFeed';
 import AdminDashboard from './pages/AdminDashboard';
 import LoginPage from './pages/LoginPage';
+import MyFeed from './pages/MyFeed';
+import TeamPage from './pages/TeamPage';
 
 export default function App() {
   return (
@@ -13,6 +15,8 @@ export default function App() {
       <Routes>
         <Route path="/" element={<EnterCode />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/feed" element={<MyFeed />} />
+        <Route path="/team/:id" element={<TeamPage />} />
         <Route path="/match/:id" element={<MatchScreen />} />
         <Route path="/match/:id/end" element={<PostMatch />} />
         <Route path="/live/:id" element={<SupporterFeed />} />

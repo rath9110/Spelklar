@@ -5,6 +5,9 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const matchRouter = require('./routes/match');
 const authRouter = require('./routes/auth');
+const teamsRouter = require('./routes/teams');
+const clubsRouter = require('./routes/clubs');
+const followsRouter = require('./routes/follows');
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +37,9 @@ app.get('/', (req, res) => {
 matchRouter.setIo(io);
 app.use('/api/match', matchRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/teams', teamsRouter);
+app.use('/api/clubs', clubsRouter);
+app.use('/api/follows', followsRouter);
 
 // Get all matches (admin)
 app.get('/api/matches', async (req, res) => {
@@ -42,13 +48,37 @@ app.get('/api/matches', async (req, res) => {
   res.json(matches);
 });
 
-// Socket.io: clients join a room by matchId
+// Socket.io: authenticated connections
 io.on('connection', (socket) => {
+  const userId = socket.handshake.auth?.userId;
+
+  // Join match room (public)
   socket.on('join:match', (matchId) => {
-    socket.join(matchId);
+    socket.join(`match:${matchId}`);
   });
+
   socket.on('leave:match', (matchId) => {
-    socket.leave(matchId);
+    socket.leave(`match:${matchId}`);
+  });
+
+  // Join team rooms (for followed teams)
+  socket.on('join:team', (teamId) => {
+    if (userId) {
+      socket.join(`team:${teamId}`);
+    }
+  });
+
+  socket.on('leave:team', (teamId) => {
+    if (userId) {
+      socket.leave(`team:${teamId}`);
+    }
+  });
+
+  // User-specific notifications
+  socket.on('join:user', () => {
+    if (userId) {
+      socket.join(`user:${userId}`);
+    }
   });
 });
 

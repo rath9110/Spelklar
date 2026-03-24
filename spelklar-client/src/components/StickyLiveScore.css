@@ -1,0 +1,138 @@
+.sticky-live-score {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-bottom: 2px solid #2ecc71;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  z-index: 90;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  user-select: none;
+}
+
+.live-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2ecc71;
+  white-space: nowrap;
+  min-width: 50px;
+}
+
+.live-indicator .pulse {
+  font-size: 8px;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.score-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.team-name {
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80px;
+}
+
+.team .score {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f3d2b;
+  line-height: 1;
+}
+
+.timer {
+  font-size: 14px;
+  font-weight: 600;
+  color: #999;
+  width: 40px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.close-btn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f7f7f5;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #999;
+  transition: background-color 0.2s;
+}
+
+.close-btn:hover {
+  background-color: #eee;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .sticky-live-score {
+    background: #2a2a2a;
+    border-bottom-color: #4ade80;
+  }
+
+  .live-indicator {
+    color: #4ade80;
+  }
+
+  .team-name {
+    color: #999;
+  }
+
+  .team .score {
+    color: #4ade80;
+  }
+
+  .timer {
+    color: #666;
+  }
+
+  .close-btn {
+    background: #333;
+    color: #666;
+  }
+
+  .close-btn:hover {
+    background-color: #444;
+  }
+}
+
+/* Add top padding to pages with sticky score */
+.has-sticky-score {
+  padding-top: 60px;
+}

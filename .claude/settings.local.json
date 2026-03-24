@@ -6,7 +6,10 @@
       "Bash(npx prisma:*)",
       "Bash(npm uninstall:*)",
       "Bash(timeout 10 npm start)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(timeout 5 npm start)",
+      "Bash(pkill -f \"node src/index.js\")",
+      "Bash(PORT=3002 timeout 5 npm start)"
     ]
   }
 }
