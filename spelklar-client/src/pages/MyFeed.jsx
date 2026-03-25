@@ -25,10 +25,18 @@ export default function MyFeed() {
     try {
       setLoading(true);
       const matches = await api.getMyLiveMatches();
-      setLiveMatches(matches);
 
-      if (matches.length > 0) {
-        setSelectedMatch(matches[0]);
+      // Transform API response to match expected format
+      const transformedMatches = matches.map(m => ({
+        ...m,
+        homeTeam: m.homeTeam?.name || m.homeTeamName,
+        awayTeam: m.awayTeam?.name || m.awayTeamName,
+      }));
+
+      setLiveMatches(transformedMatches);
+
+      if (transformedMatches.length > 0) {
+        setSelectedMatch(transformedMatches[0]);
       }
     } catch (err) {
       console.error('Error fetching live matches:', err);
@@ -42,14 +50,21 @@ export default function MyFeed() {
     socket.connect();
 
     socket.on('match:update', (match) => {
+      // Transform match data to expected format
+      const transformed = {
+        ...match,
+        homeTeam: match.homeTeam?.name || match.homeTeamName,
+        awayTeam: match.awayTeam?.name || match.awayTeamName,
+      };
+
       setLiveMatches((prev) =>
         prev.map((m) =>
-          m.id === match.id ? match : m
+          m.id === match.id ? transformed : m
         )
       );
 
       if (selectedMatch?.id === match.id) {
-        setSelectedMatch(match);
+        setSelectedMatch(transformed);
       }
     });
   };
