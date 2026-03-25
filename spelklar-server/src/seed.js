@@ -384,8 +384,8 @@ async function seed() {
     console.log(`   Login:           https://spelklar.vercel.app/login`);
     console.log(`   Anna's feed:     https://spelklar.vercel.app/feed`);
     console.log(`   FEED01 match:    https://spelklar.vercel.app/feed/FEED01`);
-    console.log(`\n💡 Try this as Anna (+46701234567):`)
-    console.log('   1. Go to /feed (see FEED01 live match)`);
+    console.log(`\n💡 Try this as Anna (+46701234567):`);
+    console.log('   1. Go to /feed (see FEED01 live match)');
     console.log('   2. See live score 3-1, events, and 2 photos');
     console.log('   3. Click match to see full feed');
     console.log('   4. Upload a photo (tap 📷 FAB)');
