@@ -14,8 +14,9 @@ export default function TeamPage() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetchTeam();
     checkUser();
+    fetchTeam();
+    checkFollowStatus();
   }, [id]);
 
   const checkUser = () => {
@@ -30,12 +31,24 @@ export default function TeamPage() {
       setLoading(true);
       const data = await api.getTeam(id);
       setTeam(data);
-      // TODO: Check if user is following this team
     } catch (err) {
       console.error('Error fetching team:', err);
       setError('Failed to load team');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkFollowStatus = async () => {
+    try {
+      const user = localStorage.getItem('user');
+      if (!user) return;
+
+      const follows = await api.getMyFollows();
+      const isFollowingTeam = follows.some(f => f.teamId === id);
+      setIsFollowing(isFollowingTeam);
+    } catch (err) {
+      console.error('Error checking follow status:', err);
     }
   };
 

@@ -189,6 +189,53 @@ async function seed() {
     console.log('✓ Created live match: LIVE01 (AIK U12 Gul 2-1 Solna U12)');
     console.log(`  - 4 events logged (2 goals for home, 1 for away, 1 sub)`);
 
+    // Create another live match that Anna follows (for feed demo)
+    const feedMatch = await prisma.match.create({
+      data: {
+        id: 'FEED01',
+        homeTeamId: aikU12.id,
+        awayTeamId: hammarbyU12.id,
+        homeTeamName: 'AIK U12 Blå',
+        awayTeamName: 'Hammarby U12',
+        homeScore: 3,
+        awayScore: 1,
+        timerSeconds: 2100, // 35:00
+        status: 'live',
+        events: {
+          create: [
+            {
+              type: 'goal',
+              team: 'home',
+              timerSeconds: 300,
+              timestamp: new Date(Date.now() - 8 * 60000),
+            },
+            {
+              type: 'goal',
+              team: 'home',
+              timerSeconds: 900,
+              timestamp: new Date(Date.now() - 6 * 60000),
+            },
+            {
+              type: 'goal',
+              team: 'away',
+              timerSeconds: 1200,
+              timestamp: new Date(Date.now() - 4 * 60000),
+            },
+            {
+              type: 'goal',
+              team: 'home',
+              timerSeconds: 1800,
+              timestamp: new Date(Date.now() - 2 * 60000),
+            },
+          ],
+        },
+      },
+      include: { events: true },
+    });
+
+    console.log('✓ Created live match: FEED01 (AIK U12 Blå 3-1 Hammarby U12)');
+    console.log(`  - Anna and Göran follow this team!`);
+
     // Create demo photos
     const photo1 = await prisma.photo.create({
       data: {
@@ -245,10 +292,51 @@ async function seed() {
       },
     });
 
-    console.log('✓ Created 3 demo photos for live match');
+    console.log('✓ Created 3 demo photos for LIVE01');
     console.log(`  - 1 approved (Great goal)`);
     console.log(`  - 1 pending (Team celebration)`);
     console.log(`  - 1 approved (Team photo)`);
+
+    // Add photos to FEED01 (the match Anna follows)
+    const feedPhoto1 = await prisma.photo.create({
+      data: {
+        matchId: feedMatch.id,
+        uploaderId: parentUser.id,
+        storageKey: 'photos/feed-photo-1.jpg',
+        thumbnailKey: 'photos/feed-photo-1-thumb.jpg',
+        caption: 'Beautiful assist by Maja! 🎯',
+        status: 'approved',
+        moderatedBy: staffUser.id,
+        moderatedAt: new Date(Date.now() - 7 * 60000),
+        consents: {
+          create: {
+            grantedBy: parentUser.id,
+            scope: 'match',
+          },
+        },
+      },
+    });
+
+    const feedPhoto2 = await prisma.photo.create({
+      data: {
+        matchId: feedMatch.id,
+        uploaderId: grandparentUser.id,
+        storageKey: 'photos/feed-photo-2.jpg',
+        thumbnailKey: 'photos/feed-photo-2-thumb.jpg',
+        caption: 'Linus scoring again! Top striker! ⚽⚽',
+        status: 'approved',
+        moderatedBy: staffUser.id,
+        moderatedAt: new Date(Date.now() - 5 * 60000),
+        consents: {
+          create: {
+            grantedBy: grandparentUser.id,
+            scope: 'match',
+          },
+        },
+      },
+    });
+
+    console.log('✓ Created 2 demo photos for FEED01 (Anna and Göran follow this match)');
 
     console.log('\n✅ Seed complete! Demo data ready.\n');
 
@@ -272,27 +360,36 @@ async function seed() {
 
     console.log('\n🎮 Matches:');
     console.log(`   DEMO01: Pre-game (AIK U12 Blå vs Hammarby U12)`);
-    console.log(`   LIVE01: 🔴 LIVE (AIK U12 Gul 2-1 Solna U12) ← HAS PHOTOS & EVENTS`);
+    console.log(`   LIVE01: 🔴 LIVE (AIK U12 Gul 2-1 Solna U12)`);
+    console.log(`   FEED01: 🔴 LIVE (AIK U12 Blå 3-1 Hammarby U12) ← Anna & Göran follow this!`);
 
-    console.log('\n📷 Demo Photos (on LIVE01):');
-    console.log(`   1. ✓ Approved: "Great goal by Victor!"`);
-    console.log(`   2. ⏳ Pending: "Team celebration"`);
-    console.log(`   3. ✓ Approved: "Full team photo"`);
+    console.log('\n📷 Demo Photos:');
+    console.log(`   LIVE01:`)
+    console.log(`     1. ✓ Approved: "Great goal by Victor!"`);
+    console.log(`     2. ⏳ Pending: "Team celebration"`);
+    console.log(`     3. ✓ Approved: "Full team photo"`);
+    console.log(`   FEED01 (Anna's feed):`)
+    console.log(`     1. ✓ Approved: "Beautiful assist by Maja!"`);
+    console.log(`     2. ✓ Approved: "Linus scoring again!"`);
 
-    console.log('\n🔗 Quick Links:');
+    console.log('\n🔗 Quick Links (local):');
     console.log('─'.repeat(50));
     console.log(`   Login:           http://localhost:5173/login`);
-    console.log(`   Pre-game feed:   http://localhost:5173/feed/DEMO01`);
-    console.log(`   Live match feed: http://localhost:5173/feed/LIVE01`);
-    console.log(`   My feed:         http://localhost:5173/feed`);
+    console.log(`   Anna's feed:     http://localhost:5173/feed (shows FEED01)`);
+    console.log(`   FEED01 match:    http://localhost:5173/feed/FEED01`);
+    console.log(`   LIVE01 match:    http://localhost:5173/feed/LIVE01`);
     console.log(`   Moderation:      http://localhost:5173/admin/photos`);
-    console.log('\n💡 Try this:');
-    console.log('   1. Login with +46701234567 (Anna)');
-    console.log('   2. Go to /feed/LIVE01');
-    console.log('   3. See live score, events, and photos');
-    console.log('   4. Upload a photo (tap 📷)');
-    console.log('   5. Login with +46702345678 (Erik) in another tab');
-    console.log('   6. Go to /admin/photos to approve your photo');
+    console.log(`\n🔗 Quick Links (production):`)
+    console.log('─'.repeat(50));
+    console.log(`   Login:           https://spelklar.vercel.app/login`);
+    console.log(`   Anna's feed:     https://spelklar.vercel.app/feed`);
+    console.log(`   FEED01 match:    https://spelklar.vercel.app/feed/FEED01`);
+    console.log(`\n💡 Try this as Anna (+46701234567):`)
+    console.log('   1. Go to /feed (see FEED01 live match)`);
+    console.log('   2. See live score 3-1, events, and 2 photos');
+    console.log('   3. Click match to see full feed');
+    console.log('   4. Upload a photo (tap 📷 FAB)');
+    console.log('   5. Login as Erik (+46702345678) to moderate in /admin/photos');
     console.log('\n');
   } catch (error) {
     console.error('❌ Seed error:', error);
