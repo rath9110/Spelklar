@@ -19,7 +19,7 @@ export default function StickyLiveScore({ match, onClose }) {
       </div>
 
       <div className="score-container">
-        <div className="team">
+        <div className="team team-home">
           <span className="team-name">
             {match.homeTeam || 'Home'}
           </span>
@@ -30,11 +30,11 @@ export default function StickyLiveScore({ match, onClose }) {
           {Math.floor(match.timerSeconds / 60)}:{String(match.timerSeconds % 60).padStart(2, '0')}
         </div>
 
-        <div className="team">
-          <span className="score">{match.awayScore}</span>
+        <div className="team team-away">
           <span className="team-name">
             {match.awayTeam || 'Away'}
           </span>
+          <span className="score">{match.awayScore}</span>
         </div>
       </div>
 
