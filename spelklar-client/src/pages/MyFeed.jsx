@@ -21,6 +21,27 @@ export default function MyFeed() {
     };
   }, []);
 
+  // Countdown timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setLiveMatches((prev) =>
+        prev.map((m) => ({
+          ...m,
+          timerSeconds: Math.max(0, m.timerSeconds - 1),
+        }))
+      );
+
+      if (selectedMatch) {
+        setSelectedMatch((prev) => ({
+          ...prev,
+          timerSeconds: Math.max(0, prev.timerSeconds - 1),
+        }));
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [selectedMatch]);
+
   const fetchLiveMatches = async () => {
     try {
       setLoading(true);

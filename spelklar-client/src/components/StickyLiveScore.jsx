@@ -1,9 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StickyLiveScore.css';
 
 export default function StickyLiveScore({ match, onClose }) {
   const navigate = useNavigate();
+  const [timerSeconds, setTimerSeconds] = useState(match?.timerSeconds || 0);
+
+  useEffect(() => {
+    setTimerSeconds(match?.timerSeconds || 0);
+  }, [match?.id]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimerSeconds((prev) => Math.max(0, prev - 1));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (!match) return null;
 
@@ -27,7 +40,7 @@ export default function StickyLiveScore({ match, onClose }) {
         </div>
 
         <div className="timer">
-          {Math.floor(match.timerSeconds / 60)}:{String(match.timerSeconds % 60).padStart(2, '0')}
+          {Math.floor(timerSeconds / 60)}:{String(timerSeconds % 60).padStart(2, '0')}
         </div>
 
         <div className="team team-away">
