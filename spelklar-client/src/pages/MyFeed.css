@@ -1,102 +1,118 @@
 .my-feed {
-  background: #f7f7f5;
+  background: #f9f9f8;
   min-height: 100vh;
   padding: 0;
 }
 
 .feed-header {
   background: white;
-  padding: 16px;
-  border-bottom: 1px solid #eee;
+  padding: 20px 16px;
+  border-bottom: 1px solid #efefef;
   margin-top: 60px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .feed-header h1 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: #1f3d2b;
   margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .matches-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 12px;
+  padding: 16px;
+  padding-bottom: 120px;
 }
 
 .match-card {
   background: white;
-  border-radius: 8px;
-  padding: 16px;
+  border-radius: 12px;
+  padding: 18px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  border-left: 4px solid #2ecc71;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  border-left: 5px solid #2ecc71;
 }
 
 .match-card:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .match-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .match-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  font-size: 10px;
-  font-weight: 700;
+  top: 12px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 800;
   color: white;
-  background: #2ecc71;
-  padding: 4px 8px;
-  border-radius: 4px;
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  padding: 5px 10px;
+  border-radius: 5px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .match-teams {
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  gap: 8px;
-  margin-bottom: 12px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
 .match-teams .team {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex: 1;
+  min-width: 0;
 }
 
 .team-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-size: 13px;
+  font-weight: 700;
+  color: #2c2c2c;
+  text-align: center;
+  word-break: break-word;
+  line-height: 1.2;
+  max-width: 100%;
 }
 
 .team .score {
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 900;
   color: #1f3d2b;
   line-height: 1;
+  display: block;
 }
 
 .vs {
-  font-size: 12px;
-  color: #999;
-  font-weight: 600;
+  font-size: 13px;
+  color: #a0a0a0;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .match-time {
   text-align: center;
-  font-size: 12px;
-  color: #666;
-  font-weight: 500;
+  font-size: 13px;
+  color: #7a7a7a;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
 }
 
 .empty-state {
@@ -164,12 +180,13 @@
 /* Dark mode */
 @media (prefers-color-scheme: dark) {
   .my-feed {
-    background: #1c1c1c;
+    background: #0f0f0f;
   }
 
   .feed-header {
-    background: #2a2a2a;
-    border-bottom-color: #444;
+    background: #1a1a1a;
+    border-bottom-color: #2a2a2a;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
 
   .feed-header h1 {
@@ -177,16 +194,33 @@
   }
 
   .match-card {
-    background: #2a2a2a;
+    background: #1a1a1a;
     border-left-color: #4ade80;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .match-card:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  }
+
+  .match-badge {
+    background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
   }
 
   .team-name {
-    color: #ccc;
+    color: #e5e5e5;
   }
 
   .team .score {
     color: #4ade80;
+  }
+
+  .vs {
+    color: #666;
+  }
+
+  .match-time {
+    color: #999;
   }
 
   .empty-state p {
