@@ -47,12 +47,27 @@ export default function MyFeed() {
       setLoading(true);
       const matches = await api.getMyLiveMatches();
 
-      // Transform API response to match expected format
-      const transformedMatches = matches.map(m => ({
-        ...m,
-        homeTeam: m.homeTeam?.name || m.homeTeamName,
-        awayTeam: m.awayTeam?.name || m.awayTeamName,
-      }));
+      // Transform API response to match expected format and fetch photos
+      const transformedMatches = await Promise.all(
+        matches.map(async (m) => {
+          try {
+            const photos = await api.getPhotos({ matchId: m.id });
+            return {
+              ...m,
+              homeTeam: m.homeTeam?.name || m.homeTeamName,
+              awayTeam: m.awayTeam?.name || m.awayTeamName,
+              photos: photos.filter(p => p.status === 'approved').slice(0, 3), // Top 3 approved photos
+            };
+          } catch (err) {
+            return {
+              ...m,
+              homeTeam: m.homeTeam?.name || m.homeTeamName,
+              awayTeam: m.awayTeam?.name || m.awayTeamName,
+              photos: [],
+            };
+          }
+        })
+      );
 
       setLiveMatches(transformedMatches);
 
@@ -146,6 +161,20 @@ export default function MyFeed() {
             <div className="match-time">
               {Math.floor(match.timerSeconds / 60)}:{String(match.timerSeconds % 60).padStart(2, '0')}
             </div>
+
+            {match.photos && match.photos.length > 0 && (
+              <div className="match-photos">
+                {match.photos.map((photo) => (
+                  <img
+                    key={photo.id}
+                    src={photo.thumbnailKey || photo.storageKey}
+                    alt={photo.caption}
+                    className="photo-thumb"
+                    title={photo.caption}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         ))}
       </div>

@@ -118,6 +118,34 @@
   font-weight: 600;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.3px;
+  margin-bottom: 12px;
+}
+
+.match-photos {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-top: 12px;
+  border-top: 1px solid #efefef;
+  scrollbar-width: none;
+}
+
+.match-photos::-webkit-scrollbar {
+  display: none;
+}
+
+.photo-thumb {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.photo-thumb:hover {
+  transform: scale(1.05);
 }
 
 .empty-state {
