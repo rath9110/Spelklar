@@ -139,8 +139,8 @@ export default function MyFeed() {
               </div>
               <div className="vs">vs</div>
               <div className="team">
-                <span className="score">{match.awayScore}</span>
                 <span className="team-name">{match.awayTeam}</span>
+                <span className="score">{match.awayScore}</span>
               </div>
             </div>
             <div className="match-time">

@@ -5,11 +5,10 @@
   right: 0;
   background: white;
   border-bottom: 3px solid #2ecc71;
-  padding: 10px 16px;
-  display: flex;
+  padding: 8px 16px;
+  display: grid;
+  grid-template-columns: 50px 1fr 36px;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
   cursor: pointer;
   z-index: 90;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
@@ -24,7 +23,6 @@
   font-weight: 800;
   color: #2ecc71;
   white-space: nowrap;
-  min-width: fit-content;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -47,47 +45,50 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  flex: 1;
-  min-width: 0;
+  gap: 12px;
 }
 
-.team {
+.sticky-live-score .team {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
   min-width: 0;
-  flex-shrink: 1;
 }
 
-.team-name {
-  font-size: 11px;
-  color: #666;
+.sticky-live-score .team-home {
+  flex-direction: row-reverse;
+}
+
+.sticky-live-score .team-away {
+  flex-direction: row;
+}
+
+.sticky-live-score .team-name {
+  font-size: 12px;
+  color: #333;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 70px;
+  max-width: 100px;
   line-height: 1.2;
 }
 
-.team .score {
-  font-size: 26px;
+.sticky-live-score .team .score {
+  font-size: 28px;
   font-weight: 900;
   color: #1f3d2b;
   line-height: 1;
-  display: block;
 }
 
-.timer {
-  font-size: 13px;
+.sticky-live-score .timer {
+  font-size: 12px;
   font-weight: 700;
   color: #777;
-  width: 45px;
   text-align: center;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.5px;
+  min-width: 36px;
 }
 
 .close-btn {
@@ -104,6 +105,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 4px;
+  justify-self: end;
 }
 
 .close-btn:active {
@@ -122,15 +124,15 @@
     color: #4ade80;
   }
 
-  .team-name {
+  .sticky-live-score .team-name {
     color: #999;
   }
 
-  .team .score {
+  .sticky-live-score .team .score {
     color: #4ade80;
   }
 
-  .timer {
+  .sticky-live-score .timer {
     color: #666;
   }
 
