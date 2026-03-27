@@ -51,12 +51,12 @@ export default function MyFeed() {
       const transformedMatches = await Promise.all(
         matches.map(async (m) => {
           try {
-            const photos = await api.getPhotos({ matchId: m.id });
+            const photos = await api.getPhotos(m.id);
             return {
               ...m,
               homeTeam: m.homeTeam?.name || m.homeTeamName,
               awayTeam: m.awayTeam?.name || m.awayTeamName,
-              photos: photos.filter(p => p.status === 'approved').slice(0, 3), // Top 3 approved photos
+              photos: Array.isArray(photos) ? photos.filter(p => p.status === 'approved').slice(0, 4) : [],
             };
           } catch (err) {
             return {
