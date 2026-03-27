@@ -8,6 +8,7 @@ import './MyFeed.css';
 export default function MyFeed() {
   const navigate = useNavigate();
   const [liveMatches, setLiveMatches] = useState([]);
+  const [feedItems, setFeedItems] = useState([]);
   const [selectedMatch, setSelectedMatch] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,25 +48,22 @@ export default function MyFeed() {
       setLoading(true);
       const matches = await api.getMyLiveMatches();
 
-      // Transform API response to match expected format and fetch photos
+      // Transform and fetch photos for each match
       const transformedMatches = await Promise.all(
         matches.map(async (m) => {
+          let photos = [];
           try {
-            const photos = await api.getPhotos(m.id);
-            return {
-              ...m,
-              homeTeam: m.homeTeam?.name || m.homeTeamName,
-              awayTeam: m.awayTeam?.name || m.awayTeamName,
-              photos: Array.isArray(photos) ? photos.filter(p => p.status === 'approved').slice(0, 4) : [],
-            };
+            const result = await api.getPhotos(m.id);
+            photos = Array.isArray(result) ? result.filter(p => p.status === 'approved') : [];
           } catch (err) {
-            return {
-              ...m,
-              homeTeam: m.homeTeam?.name || m.homeTeamName,
-              awayTeam: m.awayTeam?.name || m.awayTeamName,
-              photos: [],
-            };
+            console.error('Error fetching photos for match', m.id, err);
           }
+          return {
+            ...m,
+            homeTeam: m.homeTeam?.name || m.homeTeamName,
+            awayTeam: m.awayTeam?.name || m.awayTeamName,
+            photos,
+          };
         })
       );
 
@@ -74,6 +72,18 @@ export default function MyFeed() {
       if (transformedMatches.length > 0) {
         setSelectedMatch(transformedMatches[0]);
       }
+
+      // Build feed items: interleave match headers with photos
+      const items = [];
+      transformedMatches.forEach((match) => {
+        // Add match score card
+        items.push({ type: 'match', data: match });
+        // Add each photo as its own feed item
+        match.photos.forEach((photo) => {
+          items.push({ type: 'photo', data: photo, match });
+        });
+      });
+      setFeedItems(items);
     } catch (err) {
       console.error('Error fetching live matches:', err);
       setError('Failed to load matches');
@@ -86,7 +96,6 @@ export default function MyFeed() {
     socket.connect();
 
     socket.on('match:update', (match) => {
-      // Transform match data to expected format
       const transformed = {
         ...match,
         homeTeam: match.homeTeam?.name || match.homeTeamName,
@@ -105,6 +114,11 @@ export default function MyFeed() {
     });
   };
 
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${String(s).padStart(2, '0')}`;
+  };
 
   if (loading) {
     return (
@@ -135,48 +149,75 @@ export default function MyFeed() {
         />
       )}
 
-      <div className="feed-header">
-        <h1>Live Matches</h1>
-      </div>
-
-      <div className="matches-list">
-        {liveMatches.map((match) => (
-          <div
-            key={match.id}
-            className="match-card"
-            onClick={() => navigate(`/live/${match.id}`)}
-          >
-            <div className="match-badge">LIVE</div>
-            <div className="match-teams">
-              <div className="team">
-                <span className="team-name">{match.homeTeam}</span>
-                <span className="score">{match.homeScore}</span>
+      <div className="feed-scroll">
+        {feedItems.map((item, index) => {
+          if (item.type === 'match') {
+            const match = item.data;
+            return (
+              <div
+                key={`match-${match.id}`}
+                className="feed-match-card"
+                onClick={() => navigate(`/live/${match.id}`)}
+              >
+                <div className="feed-match-header">
+                  <span className="feed-live-badge">LIVE</span>
+                  <span className="feed-match-time">{formatTime(match.timerSeconds)}</span>
+                </div>
+                <div className="feed-match-score">
+                  <div className="feed-team">
+                    <span className="feed-team-name">{match.homeTeam}</span>
+                    <span className="feed-score">{match.homeScore}</span>
+                  </div>
+                  <span className="feed-separator">–</span>
+                  <div className="feed-team">
+                    <span className="feed-score">{match.awayScore}</span>
+                    <span className="feed-team-name">{match.awayTeam}</span>
+                  </div>
+                </div>
+                {match.photos.length > 0 && (
+                  <div className="feed-match-photo-count">
+                    {match.photos.length} foto{match.photos.length !== 1 ? 'n' : ''}
+                  </div>
+                )}
               </div>
-              <div className="vs">vs</div>
-              <div className="team">
-                <span className="team-name">{match.awayTeam}</span>
-                <span className="score">{match.awayScore}</span>
-              </div>
-            </div>
-            <div className="match-time">
-              {Math.floor(match.timerSeconds / 60)}:{String(match.timerSeconds % 60).padStart(2, '0')}
-            </div>
+            );
+          }
 
-            {match.photos && match.photos.length > 0 && (
-              <div className="match-photos">
-                {match.photos.map((photo) => (
+          if (item.type === 'photo') {
+            const { data: photo, match } = item;
+            const imgUrl = photo.storageKey.startsWith('http')
+              ? photo.storageKey
+              : `https://picsum.photos/seed/${photo.id}/800/600`;
+
+            return (
+              <div key={`photo-${photo.id}`} className="feed-photo-card">
+                <div className="feed-photo-meta">
+                  <span className="feed-photo-uploader">{photo.uploader?.displayName || 'Användare'}</span>
+                  <span className="feed-photo-match">{match.homeTeam} vs {match.awayTeam}</span>
+                </div>
+                <div className="feed-photo-wrapper">
                   <img
-                    key={photo.id}
-                    src={photo.thumbnailKey || photo.storageKey}
-                    alt={photo.caption}
-                    className="photo-thumb"
-                    title={photo.caption}
+                    src={imgUrl}
+                    alt={photo.caption || 'Match photo'}
+                    className="feed-photo-img"
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = `https://placehold.co/800x600/1a472a/ffffff?text=${encodeURIComponent(photo.caption || 'Foto')}`;
+                    }}
                   />
-                ))}
+                </div>
+                {photo.caption && (
+                  <div className="feed-photo-caption">
+                    <strong>{photo.uploader?.displayName || 'Användare'}</strong> {photo.caption}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        ))}
+            );
+          }
+
+          return null;
+        })}
       </div>
 
       <BottomNav />
